@@ -1,28 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import KioskBoard from 'kioskboard';
+import { useState } from 'react';
+import './App.css'; 
 
-function safeCAPTCHA(){
-  return(
-    <div>
-        <mobiscroll.Numpad
-            ref="numpad"
-            theme="ios" 
-            themeVariant="light"
-            preset="decimal"
-            scale={0}
-            max={9999}
-            min={-9999}
+const Keypad = ({ onClick }) => {
+  const keys = [
+    '1', '2', '3',
+    '4', '5', '6',
+    '7', '8', '9'
+  ];
+
+  return (
+    <div className="keypad">
+      {keys.map((key) => (
+        <button 
+          key={key} 
+          className="keypad-button" 
+          onClick={() => onClick(key)}
         >
-            <input placeholder="Please Select..."/>
-        </mobiscroll.Numpad>
+          {key}
+        </button>
+      ))}
     </div>
   );
-}
+};
+
 function App() {
-  const [count, setCount] = useState(0);
+  const [showKeypad, setShowKeypad] = useState(false);
+  const [input, setInput] = useState('');
+
+  const handleKeyClick = (key) => {
+    setInput(prevInput => prevInput + key);
+  };
+
+  function safeCAPTCHA() {
+    setShowKeypad(prev => !prev);
+  }
 
   return (
     <div className="login-section">
@@ -31,17 +42,34 @@ function App() {
           <div className="form-section">
             <div className="form-section__text-field">
               <label className="form-section__label">Enter Aadhaar Number</label>
-              <input name="uid" autoComplete="off" className="form-section__input" />
+              <input 
+                name="uid" 
+                autoComplete="off" 
+                className="form-section__input" 
+              />
+            </div>
+            <div className='generated-number'>
+            <label className="form-section__label">Enter the given number</label>
+              <input 
+                name="num" 
+                autoComplete="off" 
+                className="form-section__input" 
+                value={input}
+                readOnly 
+              />
             </div>
             <div className="form-section__button-container">
               <button 
                 type="button" 
                 className="form-section__button"
-                onClick = {() => safeCAPTCHA()}
-              >Sign in With Safe CAPTCHA</button>
+                onClick={safeCAPTCHA}
+              >
+                {showKeypad ? 'Hide Keypad' : 'Sign in With Safe CAPTCHA'}
+              </button>
             </div>
           </div>
         </form>
+        {showKeypad && <Keypad onClick={handleKeyClick} />}
       </div>
     </div>
   );
