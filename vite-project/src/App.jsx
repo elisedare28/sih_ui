@@ -19,6 +19,10 @@ const Keypad = ({ onClick }) => {
           {key}
         </button>
       ))}
+      <div className="random-number-box">
+        {/*Random number here*/}
+        5
+      </div>
     </div>
   );
 };
