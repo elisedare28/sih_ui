@@ -5,7 +5,7 @@ const Keypad = ({ onClick }) => {
   const keys = [
     '1', '2', '3',
     '4', '5', '6',
-    '7', '8', '9'
+    '7', '8', '9','0'
   ];
 
   return (
@@ -20,8 +20,7 @@ const Keypad = ({ onClick }) => {
         </button>
       ))}
       <div className="random-number-box">
-        {/*Random number here*/}
-        5
+        {Math.floor(Math.random() * 10)}
       </div>
     </div>
   );
