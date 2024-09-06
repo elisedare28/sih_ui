@@ -4,6 +4,8 @@ import './App.css';
 function App() {
   const [showKeypad, setShowKeypad] = useState(false);
   const [input, setInput] = useState('');
+  const [captcha_input, setcaptcha_input] = useState('');
+  const [randomNumber, setRandomNumber] = useState(null);
   
   useEffect(() => {
     console.log('User Agent:', navigator.userAgent);
@@ -11,36 +13,30 @@ function App() {
   
 
   useEffect(() => {
-    fetch('https://ipapi.co/ip/')
-      .then(response => response.text())
-      .then(ip => {
-        console.log('IP:', ip);
-  
-        return fetch(`https://ipapi.co/${ip}/country/`).then(response => response.text())
-          .then(country => {
-            console.log('Country:', country);
-            
-            return fetch(`https://ipapi.co/${ip}/city/`).then(response => response.text())
-              .then(city => {
-                console.log('City:', city);
-                
-                const latitude = fetch(`https://ipapi.co/${ip}/latitude/`).then(res => res.text());
-                const longitude = fetch(`https://ipapi.co/${ip}/longitude/`).then(res => res.text());
-                
-                return Promise.all([latitude, longitude]);
-              });
-          });
-      })
-      .then(([latitude, longitude]) => {
-        console.log('Coordinates:', { latitude, longitude });
-      })
-      .catch(error => console.error('Error fetching user data:', error));
+    fetch('http://ip-api.com/json/?fields=status,message,country,city,lat,lon,proxy,query')
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'fail') {
+        console.error('Error:', data.message);
+      } else {
+        console.log('IP:', data.query);
+        console.log('Country:', data.country);
+        console.log('City:', data.city);
+        console.log('Coordinates:', { latitude: data.lat, longitude: data.lon });
+        console.log('isProxy:', data.proxy);
+      }
+    })
+    .catch(error => console.error('Error fetching IP data:', error));
   }, []);
   
   
   function safeCAPTCHA() {
     setShowKeypad(prev => !prev);
   }
+
+  useEffect(() => {
+    setRandomNumber(Math.floor(Math.random() * 10));
+  }, []);
 
   const Keypad = ({ onClick }) => {
     const keys = [
@@ -66,19 +62,19 @@ function App() {
             name="num" 
             autoComplete="off" 
             className="form-section__input" 
-            value={input}
+            value={captcha_input}
             readOnly 
           />
         </div>
         <div className="random-number-box">
-          {Math.floor(Math.random() * 10)}
+          {randomNumber} 
         </div>
       </div>
     );
   };
   
   const handleKeyClick = (key) => {
-    setInput(prevInput => prevInput + key);
+    setcaptcha_input(prevInput => prevInput + key);
   };
   
   const typingStart = useRef(null);
@@ -109,6 +105,7 @@ function App() {
   const [totalDistance, setTotalDistance] = useState(0);
   const startPosition = useRef(null);
   const lastPosition = useRef({ x: 0, y: 0 });
+  const startTime = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -127,6 +124,7 @@ function App() {
 
     const handleLoad = () => {
       startPosition.current = { x: lastPosition.current.x, y: lastPosition.current.y };
+      startTime.current = Date.now();
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -134,7 +132,9 @@ function App() {
   }, []);
 
   const handleSignInClick = () => {
+      const timeTaken = Date.now() - startTime.current;
       console.log('Distance from Start to Click:', totalDistance.toFixed(2));
+      console.log('Time Taken (in s):', timeTaken / 1000);
     }
   
   return (
@@ -157,7 +157,10 @@ function App() {
               <button 
                 type="button" 
                 className="form-section__button"
-                onClick={safeCAPTCHA, handleSignInClick}
+                onClick={() => {
+                  safeCAPTCHA();
+                  handleSignInClick();
+                }}
               >
                 {showKeypad ? 'Hide Keypad' : 'Sign in With Safe CAPTCHA'}
               </button>
