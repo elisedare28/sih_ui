@@ -6,14 +6,17 @@ function App() {
   const [input, setInput] = useState('');
   const [captcha_input, setcaptcha_input] = useState('');
   const [randomNumber, setRandomNumber] = useState(null);
-  
+
   useEffect(() => {
     console.log('User Agent:', navigator.userAgent);
   }, []);
-  
 
   useEffect(() => {
-    fetch('http://ip-api.com/json/?fields=status,message,country,city,lat,lon,proxy,query')
+    fetch('http://ip-api.com/json/?fields=status,message,country,city,lat,lon,proxy,query', {
+      headers: {
+        'x-vercel-protection-bypass': 'vBgmEJSPLCRsfJ0g3LyWnLZMcO76Z4RD',
+      },
+    })
     .then(response => response.json())
     .then(data => {
       if (data.status === 'fail') {
@@ -68,11 +71,23 @@ function App() {
         </div>
         <div className="random-number-box">
           {randomNumber} 
+          <br />
+          {showKeypad && 
+         
+          <button 
+            type="button" 
+            className="form-section__button"
+          >
+            Verify CAPTCHA
+          </button>
+        }
         </div>
       </div>
     );
   };
   
+
+
   const handleKeyClick = (key) => {
     setcaptcha_input(prevInput => prevInput + key);
   };
