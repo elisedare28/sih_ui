@@ -11,23 +11,16 @@ function App() {
     console.log('User Agent:', navigator.userAgent);
   }, []);
 
+  
   useEffect(() => {
-    fetch('http://ip-api.com/json/?fields=status,message,country,city,lat,lon,proxy,query', {
-      headers: {
-        'x-vercel-protection-bypass': 'vBgmEJSPLCRsfJ0g3LyWnLZMcO76Z4RD',
-      },
-    })
+    fetch('https://api.ipapi.is/')
     .then(response => response.json())
     .then(data => {
-      if (data.status === 'fail') {
-        console.error('Error:', data.message);
-      } else {
-        console.log('IP:', data.query);
-        console.log('Country:', data.country);
-        console.log('City:', data.city);
-        console.log('Coordinates:', { latitude: data.lat, longitude: data.lon });
-        console.log('isProxy:', data.proxy);
-      }
+        console.log('IP:', data.ip);
+        console.log('Country:', data.location.country);
+        console.log('City:', data.location.city);
+        console.log('Coordinates:', { latitude: data.location.latitude, longitude: data.location.longitude });
+        console.log('isProxy:', data.is_proxy);
     })
     .catch(error => console.error('Error fetching IP data:', error));
   }, []);
