@@ -144,11 +144,12 @@ const Form = () => {
                 city,
                 is_proxy : String(is_proxy)
             });
-        if(response.result == "Bot")
+        console.log(response);
+        if(response.data.result == "Bot")
         {
             alert('BOT DETECTED');        
         }
-        else if(response.result == "Not Sure")
+        else if(response.data.result == "Not Sure")
         {
             alert('Not Sure');
             setNumpad(true);
