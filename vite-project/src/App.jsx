@@ -5,6 +5,7 @@ import Form from './components/Form'
 import {BrowserRouter,Routes,Route} from "react-router-dom"
 import SortingTask from './TasksList/SortingTask'
 import ColorSelectionTask from './TasksList/ColorSelectionTask'
+import { LastScreen } from './components/LastScreen';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element = {<Form/>}/>
           <Route path="/task" element = {<SortingTask/>}/>
           <Route path="/task2" element = {<ColorSelectionTask/>}/>
+          <Route path="/home" element={<LastScreen />} />
         </Routes>
      </BrowserRouter>
      

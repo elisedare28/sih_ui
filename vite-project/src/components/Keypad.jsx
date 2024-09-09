@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './keypad.css'; 
 
-const Keypad = ({ screenValue, refresh, handleSubmit }) => {
+const Keypad = ({ handleSubmit }) => {
   const [input, setInput] = useState('');
-  const navigate = useNavigate();
-
+  //const navigate = useNavigate();
+  
   const handleClick = (value) => {
     setInput((prev) => prev + value)
   };
 
   const handleClear = () => {
-    setInput((prev) => prev.substring(0, prev.length - 1));
+   // setInput((prev) => prev.substring(0, prev.length - 1));
+     setInput('');
   };
 
   return (

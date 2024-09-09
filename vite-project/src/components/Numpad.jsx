@@ -3,15 +3,14 @@ import "../index.css";
 import Keypad from "./Keypad";
 import axios from 'axios';
 
-const Numpad = () => {
+const Numpad = (input) => {
     const [screenValue, setScreenValue] = useState('');
     const [captchaImage, setCaptchaImage] = useState(null);
-    const [ans, setAns] = useState(0);
+    const [ans, setAns] = useState(null);
 
-   
     const fetchData = async () => {
         try {
-            const response = await axios.get('/captcha_image');
+            const response = await axios.get('http://127.0.0.1:8000/captcha_image/');
             const image = response.data.image;
             const answer = response.data.answer;
             setCaptchaImage(image);
@@ -22,11 +21,12 @@ const Numpad = () => {
         }
     };
     
-    const handleSubmit = () => {
-        if (screenValue == ans) {
+    const handleSubmit = (input) => {
+        if (input === ans) {
             alert('Correct Answer!');
         } else {
             alert('Incorrect Answer. Try again.');
+            console.log(ans, typeof(ans), input, typeof(screenValue));
             fetchData();
         }
     }
@@ -40,7 +40,8 @@ const Numpad = () => {
             <div className="numpad-left">
                 <p>Enter the given number:</p>
                 <div className="num-box">
-                <img height={100} width={180} src = "https://unsplash.com/documentation#get-a-random-photo" />
+                    
+                <img height={100} width={180} src = {captchaImage}/>
                 </div>
                 <div className='submit-btn'>
                 <button className='btn' type='button' onClick={fetchData}>Refresh</button>

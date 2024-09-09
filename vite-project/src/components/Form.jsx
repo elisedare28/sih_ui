@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../index.css";
 import Numpad from "./Numpad";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Form = () => {
     const [time_taken, setTime_taken] = useState(0);
@@ -15,6 +16,7 @@ const Form = () => {
     const [input, setInput] = useState('');
     const typingStart = useRef(null);
     const typingTimer = useRef(null);  
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log('User Agent:', navigator.userAgent);
@@ -118,7 +120,7 @@ const Form = () => {
                 mouse_distance,
                 country,
                 city,
-                is_proxy
+                is_proxy 
             });
             console.log('POST Response:', response.data);
         } catch (error) {
@@ -133,15 +135,31 @@ const Form = () => {
     }, [time_taken, typing_speed, mouse_distance, mouse_movement, country, city, is_proxy]);
 
     const handleClick = async ()=>{
-        const response = await axios.get('/predict');
-        if(response.data.result == "Bot")
+        const response = await axios.post('http://127.0.0.1:8000/predict/',
+            {
+                time_taken,
+                typing_speed,
+                mouse_distance,
+                country,
+                city,
+                is_proxy : String(is_proxy)
+            });
+        if(response.result == "Bot")
         {
-            alert('BOT DETECTED');
-
+            alert('BOT DETECTED');        
         }
-
+        else if(response.result == "Not Sure")
+        {
+            alert('Not Sure');
+            setNumpad(true);
+        }
+        else
+        {
+            alert('Human detected');
+            //setNumpad(true);
+            navigate('/home');
+        }
     }
-
 
     return (
         <>
@@ -156,7 +174,7 @@ const Form = () => {
                     {numpad ? <Numpad /> : (
                         <div className="btn-container">
                             <button onClick={() => {
-                                setNumpad(true);
+                               // setNumpad(true);
                                 handleSignInClick();
                                 handleClick();
                             }} className="submit-button" type="button">Verify as Human</button>
