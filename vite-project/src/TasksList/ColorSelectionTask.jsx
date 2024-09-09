@@ -57,7 +57,7 @@ const ColorSelectionTask = () => {
           ></div>
         ))}
       </div>
-      <button className="custom-shuffle-button" onClick={generateShuffledGrid}>Shuffle Grid</button>
+      <button id="custom-shuffle-button" onClick={generateShuffledGrid}>Refresh</button>
     </div>
     </div>
   );

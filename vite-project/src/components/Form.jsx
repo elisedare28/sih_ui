@@ -132,6 +132,17 @@ const Form = () => {
         }
     }, [time_taken, typing_speed, mouse_distance, mouse_movement, country, city, is_proxy]);
 
+    const handleClick = async ()=>{
+        const response = await axios.get('/predict');
+        if(response.data.result == "Bot")
+        {
+            alert('BOT DETECTED');
+
+        }
+
+    }
+
+
     return (
         <>
             <div className="login">
@@ -147,6 +158,7 @@ const Form = () => {
                             <button onClick={() => {
                                 setNumpad(true);
                                 handleSignInClick();
+                                handleClick();
                             }} className="submit-button" type="button">Verify as Human</button>
                         </div>
                     )}

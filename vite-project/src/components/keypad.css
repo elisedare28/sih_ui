@@ -42,9 +42,20 @@
   .submit-btn{
     margin-top: 10px;
     width: 100%;
+    display: flex;
+    gap: 10px;
   }
+  
   .submit-btn button {
     width: 100%;
     color: white;
   }
   
+  #clr {
+    background-image: linear-gradient(to right, rgb(158, 30, 30), rgb(200, 0, 0));
+  }
+
+  #ok {
+    background-image: linear-gradient(to right, rgb(19, 104, 19), rgb(0, 200, 0));
+
+  }
